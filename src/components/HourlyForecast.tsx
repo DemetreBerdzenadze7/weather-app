@@ -1,6 +1,11 @@
+import { useState } from "react";
+import { useWeather } from "../context/WeatherContext";
 import { hourly } from "../data/mockWeather";
 
 function HourlyForecast() {
+  const { hourlyForecast } = useWeather();
+  console.log(hourlyForecast);
+  const [count, setCount] = useState(7);
   return (
     <section className="flex flex-col gap-4 rounded-[20px] bg-neutral-800 p-6">
       {/* Title and day button */}
@@ -13,18 +18,14 @@ function HourlyForecast() {
       </div>
 
       {/* Hours list */}
-      {hourly.map((item) => (
+      {hourlyForecast.slice(0, count).map((item) => (
         <div
           key={item.time}
           className="flex h-15 items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-700 pr-4 pl-3"
         >
-          <img
-            src={`/images/icon-${item.icon}.webp`}
-            alt=""
-            className="size-10"
-          />
+          <img src={`/images/icon-drizzle.webp`} alt="" className="size-10" />
           <p className="flex-1 text-xl font-medium">{item.time}</p>
-          <p>{item.temp}°</p>
+          <p>{item.temperature}°</p>
         </div>
       ))}
     </section>

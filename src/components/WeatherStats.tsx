@@ -1,12 +1,13 @@
-import { current } from "../data/mockWeather";
+import { useWeather } from "../context/WeatherContext";
 
 function WeatherStats() {
+  const { feelsLike, humidity, wind, precipitation } = useWeather();
   return (
     <section className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-      <StatCard label="Feels Like" value={`${current.feelsLike}°`} />
-      <StatCard label="Humidity" value={`${current.humidity}%`} />
-      <StatCard label="Wind" value={`${current.wind} km/h`} />
-      <StatCard label="Precipitation" value={`${current.precipitation} mm`} />
+      <StatCard label="Feels Like" value={`${feelsLike}°`} />
+      <StatCard label="Humidity" value={`${humidity}%`} />
+      <StatCard label="Wind" value={`${wind} km/h`} />
+      <StatCard label="Precipitation" value={`${precipitation} mm`} />
     </section>
   );
 }
