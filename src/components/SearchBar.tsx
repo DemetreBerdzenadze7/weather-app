@@ -12,6 +12,8 @@ function SearchBar() {
     setPrecipitation,
     setDailyForecast,
     setHourlyForecast,
+    setLocation,
+    setWeatherCode,
   } = useWeather();
 
   const getW = async (place: string) => {
@@ -23,11 +25,13 @@ function SearchBar() {
     if (!weather) {
       return;
     } else {
+      setLocation({ city: location.name, country: location.country });
       setCurrentTemperature(weather.current.temperature_2m);
       setFeelsLike(weather.current.apparent_temperature);
       setHumidity(weather.current.relative_humidity_2m);
       setWind(weather.current.wind_speed_10m);
       setPrecipitation(weather.current.precipitation);
+      setWeatherCode(weather.current.weather_code);
 
       setDailyForecast(
         weather.daily.time.map((date: string, i: number) => ({
@@ -46,6 +50,8 @@ function SearchBar() {
         })),
       );
     }
+
+    console.log(weather);
   };
   return (
     <form

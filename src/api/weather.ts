@@ -28,3 +28,17 @@ export async function getWeather(lat: number, lon: number) {
     return null;
   }
 }
+
+export function getWeatherIcon(code: number): string {
+  if (code === 0) return "/images/icon-sunny.webp";
+  if (code === 1 || code === 2) return "/images/icon-partly-cloudy.webp";
+  if (code === 3) return "/images/icon-overcast.webp";
+  if (code === 45 || code === 48) return "/images/icon-fog.webp";
+  if (code >= 51 && code <= 57) return "/images/icon-drizzle.webp";
+  if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82))
+    return "/images/icon-rain.webp";
+  if ((code >= 71 && code <= 77) || code === 85 || code === 86)
+    return "/images/icon-snow.webp";
+  if (code >= 95) return "/images/icon-storm.webp";
+  return "/images/icon-sunny.webp";
+}

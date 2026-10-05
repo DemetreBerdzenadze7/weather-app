@@ -13,6 +13,11 @@ export interface HourlyForecastItem {
   temperature: number;
 }
 
+interface Location {
+  city: string;
+  country: string;
+}
+
 interface ContextStates {
   currentTemperature: number | null;
   setCurrentTemperature: (value: number | null) => void;
@@ -34,6 +39,12 @@ interface ContextStates {
 
   hourlyForecast: HourlyForecastItem[];
   setHourlyForecast: (value: HourlyForecastItem[]) => void;
+
+  location: Location;
+  setLocation: (location: Location) => void;
+
+  weatherCode: number;
+  setWeatherCode: (weatherCode: number) => void;
 }
 
 const WeatherContext = createContext<ContextStates | null>(null);
@@ -50,6 +61,8 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecastItem[]>(
     [],
   );
+  const [location, setLocation] = useState<Location>({ city: "", country: "" });
+  const [weatherCode, setWeatherCode] = useState<number>(0);
 
   return (
     <WeatherContext.Provider
@@ -68,6 +81,10 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         setDailyForecast,
         hourlyForecast,
         setHourlyForecast,
+        location,
+        setLocation,
+        weatherCode,
+        setWeatherCode,
       }}
     >
       {children}
