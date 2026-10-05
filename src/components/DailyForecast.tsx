@@ -1,10 +1,11 @@
 import dayjs from "dayjs";
 import { getWeatherIcon } from "../api/weather";
 import { useWeather } from "../context/WeatherContext";
+import { cesliusToFahrenheit } from "./functions/weatherFunctions";
 
 function DailyForecast() {
+  const { selectTemp } = useWeather();
   const { dailyForecast } = useWeather();
-  console.log(dailyForecast);
   return (
     <section className="mt-12">
       <h3 className="text-xl font-semibold">Daily forecast</h3>
@@ -22,8 +23,18 @@ function DailyForecast() {
               className="size-15"
             />
             <div className="flex w-full justify-between">
-              <span>{item.maxTemperature}°</span>
-              <span className="text-neutral-200">{item.minTemperature}°</span>
+              <span>
+                {selectTemp === "fahrenheit"
+                  ? cesliusToFahrenheit(item.maxTemperature)
+                  : item.maxTemperature}
+                °
+              </span>
+              <span className="text-neutral-200">
+                {selectTemp === "fahrenheit"
+                  ? cesliusToFahrenheit(item.minTemperature)
+                  : item.minTemperature}
+                °
+              </span>
             </div>
           </div>
         ))}

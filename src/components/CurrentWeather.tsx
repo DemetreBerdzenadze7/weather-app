@@ -1,10 +1,16 @@
 import { getWeatherIcon } from "../api/weather";
 import { useWeather } from "../context/WeatherContext";
 import dayjs from "dayjs";
+import { cesliusToFahrenheit } from "./functions/weatherFunctions";
 
 function CurrentWeather() {
-  const { currentTemperature, location, weatherCode, dailyForecast } =
-    useWeather();
+  const {
+    currentTemperature,
+    location,
+    weatherCode,
+    dailyForecast,
+    selectTemp,
+  } = useWeather();
 
   return (
     <section className="flex min-h-72 flex-col items-center justify-center gap-4 rounded-[20px] bg-[url('/images/bg-today-small.svg')] bg-cover px-6 md:flex-row md:justify-between md:bg-[url('/images/bg-today-large.svg')]">
@@ -23,7 +29,12 @@ function CurrentWeather() {
         {currentTemperature !== null && (
           <img src={getWeatherIcon(weatherCode)} alt="" className="size-30" />
         )}
-        <p className="text-8xl font-semibold italic">{currentTemperature}°</p>
+        <p className="text-8xl font-semibold italic">
+          {selectTemp === "fahrenheit" && currentTemperature
+            ? cesliusToFahrenheit(currentTemperature)
+            : currentTemperature}
+          °
+        </p>
       </div>
     </section>
   );

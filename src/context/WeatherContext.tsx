@@ -48,6 +48,15 @@ interface ContextStates {
   setWeatherCode: (weatherCode: number) => void;
 
   getCurrentWeather: (place: string) => Promise<void>;
+
+  selectTemp: string;
+  setSelectTemp: React.Dispatch<React.SetStateAction<string>>;
+
+  selectSpeed: string;
+  setSelectSpeed: React.Dispatch<React.SetStateAction<string>>;
+
+  selectPrecipitation: string;
+  setSelectPrecipitation: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const WeatherContext = createContext<ContextStates | null>(null);
@@ -66,6 +75,9 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
   );
   const [location, setLocation] = useState<Location>({ city: "", country: "" });
   const [weatherCode, setWeatherCode] = useState<number>(0);
+  const [selectTemp, setSelectTemp] = useState<string>("celsius");
+  const [selectSpeed, setSelectSpeed] = useState<string>("mk");
+  const [selectPrecipitation, setSelectPrecipitation] = useState<string>("mm");
 
   async function getCurrentWeather(place: string) {
     const location = await getCoordinates(place);
@@ -122,6 +134,12 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         weatherCode,
         setWeatherCode,
         getCurrentWeather,
+        selectTemp,
+        setSelectTemp,
+        selectSpeed,
+        setSelectSpeed,
+        selectPrecipitation,
+        setSelectPrecipitation,
       }}
     >
       {children}

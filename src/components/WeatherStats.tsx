@@ -1,13 +1,35 @@
 import { useWeather } from "../context/WeatherContext";
+import {
+  cesliusToFahrenheit,
+  kmhToMph,
+  mmToInch,
+} from "./functions/weatherFunctions";
 
 function WeatherStats() {
-  const { feelsLike, humidity, wind, precipitation } = useWeather();
+  const {
+    feelsLike,
+    humidity,
+    wind,
+    precipitation,
+    selectTemp,
+    selectSpeed,
+    selectPrecipitation,
+  } = useWeather();
   return (
     <section className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-      <StatCard label="Feels Like" value={`${feelsLike}°`} />
+      <StatCard
+        label="Feels Like"
+        value={`${selectTemp === "fahrenheit" && feelsLike ? cesliusToFahrenheit(feelsLike) : feelsLike}°`}
+      />
       <StatCard label="Humidity" value={`${humidity}%`} />
-      <StatCard label="Wind" value={`${wind} km/h`} />
-      <StatCard label="Precipitation" value={`${precipitation} mm`} />
+      <StatCard
+        label="Wind"
+        value={`${selectSpeed === "mp" && wind ? kmhToMph(wind) : wind} ${selectSpeed === "mp" ? "mph" : "km/h"}`}
+      />
+      <StatCard
+        label="Precipitation"
+        value={`${selectPrecipitation === "in" && precipitation ? mmToInch(precipitation) : precipitation} ${selectPrecipitation === "in" ? "in" : "mm"}`}
+      />
     </section>
   );
 }

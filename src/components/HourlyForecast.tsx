@@ -1,9 +1,10 @@
 import dayjs from "dayjs";
 import { getWeatherIcon } from "../api/weather";
 import { useWeather } from "../context/WeatherContext";
+import { cesliusToFahrenheit } from "./functions/weatherFunctions";
 
 function HourlyForecast() {
-  const { hourlyForecast } = useWeather();
+  const { hourlyForecast, selectTemp } = useWeather();
   return (
     <section className="flex flex-col gap-4 rounded-[20px] bg-neutral-800 p-6">
       {/* Title and day button */}
@@ -30,7 +31,12 @@ function HourlyForecast() {
             <p className="flex-1 text-xl font-medium">
               {dayjs(item.time).format("h A")}
             </p>
-            <p>{item.temperature}°</p>
+            <p>
+              {selectTemp === "fahrenheit"
+                ? cesliusToFahrenheit(item.temperature)
+                : item.temperature}
+              °
+            </p>
           </div>
         ))}
       </div>
