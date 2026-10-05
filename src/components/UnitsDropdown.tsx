@@ -13,14 +13,17 @@ function UnitsDropdown() {
   } = useWeather();
   const [isOpen, setIsOpen] = useState(false);
 
-  const me = {
-    temperature: selectTemp,
-    speed: selectSpeed,
-    precipitation: selectPrecipitation,
-  };
+  const isImperial =
+    selectTemp === "fahrenheit" &&
+    selectSpeed === "mp" &&
+    selectPrecipitation === "in";
 
   useEffect(() => {
-    saveToLocaleStorage(me);
+    saveToLocaleStorage({
+      temperature: selectTemp,
+      speed: selectSpeed,
+      precipitation: selectPrecipitation,
+    });
   }, [selectPrecipitation, selectSpeed, selectTemp]);
 
   return (
@@ -28,7 +31,7 @@ function UnitsDropdown() {
       {/* Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 rounded-lg bg-neutral-800 px-4 py-3 hover:bg-neutral-700"
+        className="flex items-center gap-2.5 rounded-lg bg-neutral-800 px-4 py-3 hover:bg-neutral-700 cursor-pointer"
       >
         <img src="/images/icon-units.svg" alt="" />
         Units
@@ -38,8 +41,21 @@ function UnitsDropdown() {
       {/* Menu */}
       {isOpen && (
         <div className="absolute top-full right-0 z-10 mt-2.5 w-54 rounded-xl border border-neutral-600 bg-neutral-800 p-2">
-          <button className="w-full rounded-lg px-2 py-2.5 text-left hover:bg-neutral-700">
-            Switch to Imperial
+          <button
+            className="w-full rounded-lg px-2 py-2.5 text-left hover:bg-neutral-700 cursor-pointer"
+            onClick={() => {
+              if (isImperial) {
+                setSelectTemp("celsius");
+                setSelectSpeed("mk");
+                setSelectPrecipitation("mm");
+              } else {
+                setSelectTemp("fahrenheit");
+                setSelectSpeed("mp");
+                setSelectPrecipitation("in");
+              }
+            }}
+          >
+            {isImperial ? "Switch to Metric" : "Switch to Imperial"}
           </button>
 
           <p className="px-2 pt-2 text-sm text-neutral-300">Temperature</p>
@@ -100,7 +116,7 @@ function MenuItem({
 }) {
   return (
     <button
-      className={`flex w-full items-center justify-between rounded-lg px-2 py-2.5 hover:bg-neutral-700 ${
+      className={`flex w-full items-center justify-between rounded-lg px-2 py-2.5 hover:bg-neutral-700 cursor-pointer ${
         selected ? "bg-neutral-700" : ""
       }`}
       onClick={onClick}

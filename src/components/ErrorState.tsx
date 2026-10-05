@@ -11,7 +11,7 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
       </p>
       <button
         onClick={onRetry}
-        className="flex items-center gap-2.5 rounded-lg bg-neutral-800 px-4 py-3 hover:bg-neutral-700"
+        className="flex items-center gap-2.5 rounded-lg bg-neutral-800 px-4 py-3 hover:bg-neutral-700 cursor-pointer"
       >
         <img src="/images/icon-retry.svg" alt="" />
         Retry

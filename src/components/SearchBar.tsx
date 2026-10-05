@@ -85,7 +85,7 @@ function SearchBar() {
       </div>
 
       <button
-        className="h-14 rounded-xl bg-blue-500 px-6 text-xl hover:bg-blue-700"
+        className="h-14 rounded-xl bg-blue-500 px-6 text-xl hover:bg-blue-700 cursor-pointer"
         type="submit"
       >
         Search
