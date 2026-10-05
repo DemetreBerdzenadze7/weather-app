@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { getWeatherIcon } from "../api/weather";
 import { useWeather } from "../context/WeatherContext";
 
@@ -16,7 +17,7 @@ function HourlyForecast() {
 
       {/* Hours list — scrolls when it exceeds the max height */}
       <div className="flex max-h-150 flex-col gap-4 overflow-y-auto pr-2">
-        {hourlyForecast.slice(0, 23).map((item) => (
+        {hourlyForecast.slice(0, 24).map((item) => (
           <div
             key={item.time}
             className="flex h-15 shrink-0 items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-700 pr-4 pl-3"
@@ -26,7 +27,9 @@ function HourlyForecast() {
               alt=""
               className="size-10"
             />
-            <p className="flex-1 text-xl font-medium">{item.time}</p>
+            <p className="flex-1 text-xl font-medium">
+              {dayjs(item.time).format("h A")}
+            </p>
             <p>{item.temperature}°</p>
           </div>
         ))}

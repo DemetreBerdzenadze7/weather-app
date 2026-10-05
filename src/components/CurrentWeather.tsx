@@ -3,8 +3,8 @@ import { useWeather } from "../context/WeatherContext";
 import dayjs from "dayjs";
 
 function CurrentWeather() {
-  const { currentTemperature, location, weatherCode } = useWeather();
-  const date = dayjs().format("dddd MMM D YYYY");
+  const { currentTemperature, location, weatherCode, dailyForecast } =
+    useWeather();
 
   return (
     <section className="flex min-h-72 flex-col items-center justify-center gap-4 rounded-[20px] bg-[url('/images/bg-today-small.svg')] bg-cover px-6 md:flex-row md:justify-between md:bg-[url('/images/bg-today-large.svg')]">
@@ -13,7 +13,9 @@ function CurrentWeather() {
         <h2 className="text-[28px] font-bold">
           {location.city}, {location.country}
         </h2>
-        <p className="mt-3 text-lg opacity-80">{date}</p>
+        <p className="mt-3 text-lg opacity-80">
+          {dayjs(dailyForecast[0]?.date).format("ddd MMM D YYYY")}
+        </p>
       </div>
 
       {/* Icon and temperature */}

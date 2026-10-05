@@ -1,4 +1,5 @@
 import { useContext, createContext, useState, type ReactNode } from "react";
+import { getCoordinates, getWeather } from "../api/weather";
 
 export interface DailyForecastItem {
   date: string;
@@ -45,6 +46,8 @@ interface ContextStates {
 
   weatherCode: number;
   setWeatherCode: (weatherCode: number) => void;
+
+  getCurrentWeather: (place: string) => Promise<void>;
 }
 
 const WeatherContext = createContext<ContextStates | null>(null);
@@ -64,6 +67,39 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
   const [location, setLocation] = useState<Location>({ city: "", country: "" });
   const [weatherCode, setWeatherCode] = useState<number>(0);
 
+  async function getCurrentWeather(place: string) {
+    const location = await getCoordinates(place);
+    if (!location) return;
+
+    const weather = await getWeather(location.latitude, location.longitude);
+
+    if (!weather) return;
+
+    setLocation({ city: location.name, country: location.country });
+    setCurrentTemperature(weather.current.temperature_2m);
+    setFeelsLike(weather.current.apparent_temperature);
+    setHumidity(weather.current.relative_humidity_2m);
+    setWind(weather.current.wind_speed_10m);
+    setPrecipitation(weather.current.precipitation);
+    setWeatherCode(weather.current.weather_code);
+
+    setDailyForecast(
+      weather.daily.time.map((date: string, i: number) => ({
+        date,
+        weatherCode: weather.daily.weather_code[i],
+        maxTemperature: weather.daily.temperature_2m_max[i],
+        minTemperature: weather.daily.temperature_2m_min[i],
+      })),
+    );
+
+    setHourlyForecast(
+      weather.hourly.time.map((time: string, i: number) => ({
+        time,
+        weatherCode: weather.hourly.weather_code[i],
+        temperature: weather.hourly.temperature_2m[i],
+      })),
+    );
+  }
   return (
     <WeatherContext.Provider
       value={{
@@ -85,6 +121,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         setLocation,
         weatherCode,
         setWeatherCode,
+        getCurrentWeather,
       }}
     >
       {children}

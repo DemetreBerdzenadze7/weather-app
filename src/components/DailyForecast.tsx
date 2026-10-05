@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { getWeatherIcon } from "../api/weather";
 import { useWeather } from "../context/WeatherContext";
 
@@ -8,13 +9,13 @@ function DailyForecast() {
     <section className="mt-12">
       <h3 className="text-xl font-semibold">Daily forecast</h3>
 
-      <div className="mt-5 grid grid-cols-3 gap-4 md:grid-cols-7">
+      <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4 xl:grid-cols-7">
         {dailyForecast.map((item) => (
           <div
             key={item.date}
-            className="flex flex-col items-center gap-4 rounded-xl border border-neutral-600 bg-neutral-800 px-2.5 py-4"
+            className="flex flex-col items-center gap-4 rounded-xl border border-neutral-600 bg-neutral-800 px-3 py-4"
           >
-            <p className="text-lg">{item.date}</p>
+            <p className="text-lg">{dayjs(item.date).format("dddd")}</p>
             <img
               src={getWeatherIcon(item.weatherCode)}
               alt=""

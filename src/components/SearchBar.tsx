@@ -1,64 +1,15 @@
 import { useState } from "react";
-import { getCoordinates, getWeather } from "../api/weather";
 import { useWeather } from "../context/WeatherContext";
 
 function SearchBar() {
   const [search, setSearch] = useState<string>("");
-  const {
-    setCurrentTemperature,
-    setFeelsLike,
-    setHumidity,
-    setWind,
-    setPrecipitation,
-    setDailyForecast,
-    setHourlyForecast,
-    setLocation,
-    setWeatherCode,
-  } = useWeather();
-
-  const getW = async (place: string) => {
-    const location = await getCoordinates(place);
-    if (!location) return;
-
-    const weather = await getWeather(location.latitude, location.longitude);
-
-    if (!weather) {
-      return;
-    } else {
-      setLocation({ city: location.name, country: location.country });
-      setCurrentTemperature(weather.current.temperature_2m);
-      setFeelsLike(weather.current.apparent_temperature);
-      setHumidity(weather.current.relative_humidity_2m);
-      setWind(weather.current.wind_speed_10m);
-      setPrecipitation(weather.current.precipitation);
-      setWeatherCode(weather.current.weather_code);
-
-      setDailyForecast(
-        weather.daily.time.map((date: string, i: number) => ({
-          date,
-          weatherCode: weather.daily.weather_code[i],
-          maxTemperature: weather.daily.temperature_2m_max[i],
-          minTemperature: weather.daily.temperature_2m_min[i],
-        })),
-      );
-
-      setHourlyForecast(
-        weather.hourly.time.map((time: string, i: number) => ({
-          time,
-          weatherCode: weather.hourly.weather_code[i],
-          temperature: weather.hourly.temperature_2m[i],
-        })),
-      );
-    }
-
-    console.log(weather);
-  };
+  const { getCurrentWeather } = useWeather();
   return (
     <form
       className="mx-auto flex max-w-164 flex-col gap-3 md:flex-row md:gap-4"
       onSubmit={(e) => {
         e.preventDefault();
-        getW(search);
+        getCurrentWeather(search);
       }}
     >
       <div className="relative flex-1">

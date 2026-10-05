@@ -4,10 +4,16 @@ import CurrentWeather from "./components/CurrentWeather";
 import WeatherStats from "./components/WeatherStats";
 import DailyForecast from "./components/DailyForecast";
 import HourlyForecast from "./components/HourlyForecast";
+import { useEffect } from "react";
+import { useWeather } from "./context/WeatherContext";
 
 function App() {
+  const { getCurrentWeather } = useWeather();
+  useEffect(() => {
+    getCurrentWeather("Tbilisi");
+  }, []);
   return (
-    <div className="mx-auto max-w-304 px-4 py-6 md:px-6 lg:py-12">
+    <div className="mx-auto max-w-360 px-4 py-6 md:px-6 lg:py-12">
       <Header />
 
       <main>
