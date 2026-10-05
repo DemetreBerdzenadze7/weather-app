@@ -27,25 +27,25 @@ function CurrentWeather() {
   }
 
   return (
-    <section className="flex min-h-72 flex-col items-center justify-center gap-4 rounded-[20px] bg-[url('/images/bg-today-small.svg')] bg-cover px-6 md:flex-row md:justify-between md:bg-[url('/images/bg-today-large.svg')]">
+    <section className="flex min-h-72 flex-col items-center justify-center gap-4 overflow-hidden rounded-[20px] bg-[url('/images/bg-today-small.svg')] bg-cover bg-center px-4 py-10 sm:px-6 md:flex-row md:justify-between md:bg-[url('/images/bg-today-large.svg')]">
       {/* Location and date */}
-      <div className="text-center md:text-left">
-        <h2 className="text-[28px] font-bold">
+      <div className="w-full min-w-0 text-center md:w-auto md:text-left">
+        <h2 className="text-2xl font-bold break-words sm:text-[28px]">
           {location.city === location.country
             ? location.country
             : `${location.city}, ${location.country}`}
         </h2>
-        <p className="mt-3 text-lg opacity-80">
+        <p className="mt-3 text-base opacity-80 sm:text-lg">
           {dayjs(dailyForecast[0]?.date).format("ddd MMM D YYYY")}
         </p>
       </div>
 
       {/* Icon and temperature */}
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-3 sm:gap-5">
         {currentTemperature !== null && (
-          <img src={getWeatherIcon(weatherCode)} alt="" className="size-30" />
+          <img src={getWeatherIcon(weatherCode)} alt="" className="size-24 shrink-0 sm:size-30" />
         )}
-        <p className="text-8xl font-semibold italic">
+        <p className="text-7xl font-semibold whitespace-nowrap italic sm:text-8xl">
           {selectTemp === "fahrenheit" && currentTemperature
             ? cesliusToFahrenheit(currentTemperature)
             : currentTemperature}
