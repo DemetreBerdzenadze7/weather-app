@@ -4,7 +4,7 @@ import { useWeather } from "../context/WeatherContext";
 import { cesliusToFahrenheit } from "./functions/weatherFunctions";
 
 function HourlyForecast() {
-  const { hourlyForecast, selectTemp } = useWeather();
+  const { hourlyForecast, selectTemp, isLoading } = useWeather();
   return (
     <section className="flex flex-col gap-4 rounded-[20px] bg-neutral-800 p-6">
       {/* Title and day button */}
@@ -18,27 +18,36 @@ function HourlyForecast() {
 
       {/* Hours list — scrolls when it exceeds the max height */}
       <div className="flex max-h-150 flex-col gap-4 overflow-y-auto pr-2">
-        {hourlyForecast.slice(0, 24).map((item) => (
-          <div
-            key={item.time}
-            className="flex h-15 shrink-0 items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-700 pr-4 pl-3"
-          >
-            <img
-              src={getWeatherIcon(item.weatherCode)}
-              alt=""
-              className="size-10"
+        {isLoading &&
+          Array.from({ length: 8 }, (_, i) => (
+            <div
+              key={i}
+              className="h-15 shrink-0 animate-pulse rounded-lg border border-neutral-600 bg-neutral-700"
             />
-            <p className="flex-1 text-xl font-medium">
-              {dayjs(item.time).format("h A")}
-            </p>
-            <p>
-              {selectTemp === "fahrenheit"
-                ? cesliusToFahrenheit(item.temperature)
-                : item.temperature}
-              °
-            </p>
-          </div>
-        ))}
+          ))}
+
+        {!isLoading &&
+          hourlyForecast.slice(0, 24).map((item) => (
+            <div
+              key={item.time}
+              className="flex h-15 shrink-0 items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-700 pr-4 pl-3"
+            >
+              <img
+                src={getWeatherIcon(item.weatherCode)}
+                alt=""
+                className="size-10"
+              />
+              <p className="flex-1 text-xl font-medium">
+                {dayjs(item.time).format("h A")}
+              </p>
+              <p>
+                {selectTemp === "fahrenheit"
+                  ? cesliusToFahrenheit(item.temperature)
+                  : item.temperature}
+                °
+              </p>
+            </div>
+          ))}
       </div>
     </section>
   );

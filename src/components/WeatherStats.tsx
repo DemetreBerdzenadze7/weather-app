@@ -14,7 +14,20 @@ function WeatherStats() {
     selectTemp,
     selectSpeed,
     selectPrecipitation,
+    isLoading,
   } = useWeather();
+
+  if (isLoading) {
+    return (
+      <section className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+        <StatCard label="Feels Like" value="–" />
+        <StatCard label="Humidity" value="–" />
+        <StatCard label="Wind" value="–" />
+        <StatCard label="Precipitation" value="–" />
+      </section>
+    );
+  }
+
   return (
     <section className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
       <StatCard

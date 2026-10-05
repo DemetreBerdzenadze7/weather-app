@@ -1,5 +1,6 @@
 import { useContext, createContext, useState, type ReactNode } from "react";
 import { getCoordinates, getWeather } from "../api/weather";
+import { getToLocaleStorage } from "../components/functions/weatherFunctions";
 
 export interface DailyForecastItem {
   date: string;
@@ -13,6 +14,8 @@ export interface HourlyForecastItem {
   weatherCode: number;
   temperature: number;
 }
+
+export type WeatherError = "not-found" | "api" | null;
 
 interface Location {
   city: string;
@@ -49,6 +52,10 @@ interface ContextStates {
 
   getCurrentWeather: (place: string) => Promise<void>;
 
+  error: WeatherError;
+  lastPlace: string;
+  isLoading: boolean;
+
   selectTemp: string;
   setSelectTemp: React.Dispatch<React.SetStateAction<string>>;
 
@@ -75,17 +82,48 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
   );
   const [location, setLocation] = useState<Location>({ city: "", country: "" });
   const [weatherCode, setWeatherCode] = useState<number>(0);
-  const [selectTemp, setSelectTemp] = useState<string>("celsius");
-  const [selectSpeed, setSelectSpeed] = useState<string>("mk");
-  const [selectPrecipitation, setSelectPrecipitation] = useState<string>("mm");
+  const [selectTemp, setSelectTemp] = useState<string>(
+    getToLocaleStorage().temperature,
+  );
+  const [selectSpeed, setSelectSpeed] = useState<string>(
+    getToLocaleStorage().speed,
+  );
+  const [selectPrecipitation, setSelectPrecipitation] = useState<string>(
+    getToLocaleStorage().precipitation,
+  );
+  const [error, setError] = useState<WeatherError>(null);
+  const [lastPlace, setLastPlace] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   async function getCurrentWeather(place: string) {
-    const location = await getCoordinates(place);
-    if (!location) return;
+    const trimmedPlace = place.trim();
+    setLastPlace(trimmedPlace);
 
-    const weather = await getWeather(location.latitude, location.longitude);
+    if (!trimmedPlace) {
+      setError("not-found");
+      return;
+    }
 
-    if (!weather) return;
+    setError(null);
+    setIsLoading(true);
+
+    let location;
+    let weather;
+    try {
+      location = await getCoordinates(trimmedPlace);
+      if (!location) {
+        setError("not-found");
+        return;
+      }
+
+      weather = await getWeather(location.latitude, location.longitude);
+    } catch (err) {
+      console.error(err);
+      setError("api");
+      return;
+    } finally {
+      setIsLoading(false);
+    }
 
     setLocation({ city: location.name, country: location.country });
     setCurrentTemperature(weather.current.temperature_2m);
@@ -134,6 +172,9 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         weatherCode,
         setWeatherCode,
         getCurrentWeather,
+        error,
+        lastPlace,
+        isLoading,
         selectTemp,
         setSelectTemp,
         selectSpeed,

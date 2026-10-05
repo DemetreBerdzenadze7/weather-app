@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWeather } from "../context/WeatherContext";
+import { saveToLocaleStorage } from "./functions/weatherFunctions";
 
 function UnitsDropdown() {
   const {
@@ -11,6 +12,16 @@ function UnitsDropdown() {
     setSelectPrecipitation,
   } = useWeather();
   const [isOpen, setIsOpen] = useState(false);
+
+  const me = {
+    temperature: selectTemp,
+    speed: selectSpeed,
+    precipitation: selectPrecipitation,
+  };
+
+  useEffect(() => {
+    saveToLocaleStorage(me);
+  }, [selectPrecipitation, selectSpeed, selectTemp]);
 
   return (
     <div className="relative">
@@ -34,7 +45,9 @@ function UnitsDropdown() {
           <p className="px-2 pt-2 text-sm text-neutral-300">Temperature</p>
           <MenuItem
             text="Celsius (°C)"
-            onClick={() => setSelectTemp("celsius")}
+            onClick={() => {
+              setSelectTemp("celsius");
+            }}
             selected={selectTemp === "celsius"}
           />
           <MenuItem
